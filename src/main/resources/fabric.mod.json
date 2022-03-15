@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "minehutrouter",
+  "version": "${version}",
+  "name": "Minehutrouter",
+  "description": "",
+  "authors": [
+    "ayunami2000"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/minehutrouter/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "me.ayunami2000.minehutrouter.Minehutrouter"
+    ]
+  },
+  "mixins": [
+    "minehutrouter.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.5",
+    "fabric": "*",
+    "minecraft": "1.17.1"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.ayunami2000.minehutrouter.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "ServerNetworkIoMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
