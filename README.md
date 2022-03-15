@@ -1,3 +1,7 @@
+## MESSAGE TO MINEHUT
+
+please do not patch this, becasue it is ENTIRELY harmless and is a lot of fun. IPs are still masked soooo its basically we are using our own resources... its really not hurting you guys at all!!
+
 # fard
 
 0. choose fabric 1.17.1 (non auto updating one)
