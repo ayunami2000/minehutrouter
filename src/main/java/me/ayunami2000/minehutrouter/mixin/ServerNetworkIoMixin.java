@@ -8,9 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -20,17 +18,53 @@ import java.util.UUID;
 public class ServerNetworkIoMixin {
     @Inject(method = "bind(Ljava/net/InetAddress;I)V", at = @At("HEAD"))
     private void injected(InetAddress address, int port, CallbackInfo ci) {
+        final String jex = ProcessHandle.current().info().command().orElse("java");
         new Thread(() -> {
             Scanner scanner = new Scanner(System.in);
             String ln;
+            Process p = null;
             while(true){
                 ln=scanner.nextLine().trim();
                 if(ln.equalsIgnoreCase("plsstop")){
                     System.out.println("Stopping!");
                     Runtime.getRuntime().halt(0);
-                }else if(ln.equalsIgnoreCase("refresh")){
+                }else if(ln.equalsIgnoreCase("refresh")) {
                     System.out.println("Refreshing ip:port from file!");
                     setHostPortFromFile();
+                }else if(ln.equalsIgnoreCase("stopjar")){
+                    if(p!=null&&p.isAlive()){
+                        System.out.println("Stopping jar...");
+                        p.destroyForcibly();
+                    }else{
+                        System.out.println("Error: A jar is not running!");
+                    }
+                }else if(ln.toLowerCase().startsWith("runjar ")){
+                    if(p!=null&&p.isAlive()){
+                        System.out.println("Error: A jar is already running!");
+                    }else{
+                        System.out.println("Running jar...");
+                        try {
+                            p = Runtime.getRuntime().exec(jex+" -jar "+ln.substring(7));
+                            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+                            new Thread(() -> {
+                                try{
+                                    String s;
+                                    while ((s = stdInput.readLine()) != null) {
+                                        System.out.println(s);
+                                    }
+                                } catch (IOException e) {}
+                            }).start();
+                            new Thread(() -> {
+                                try{
+                                    String s;
+                                    while ((s = stdError.readLine()) != null) {
+                                        System.out.println(s);
+                                    }
+                                } catch (IOException e) {}
+                            }).start();
+                        } catch (IOException e) {}
+                    }
                 }else if(ln.toLowerCase().startsWith("kick ")){
                     String finalLn = ln;
                     UUID theUser = ProxyServer.slots.keySet().stream().filter(uuid -> uuid.toString().equals(finalLn.substring(5))).findFirst().orElse(null);
@@ -46,7 +80,7 @@ public class ServerNetworkIoMixin {
                     }
                 }else {
                     System.out.println("Invalid command: " + ln);
-                    System.out.println("Valid commands are: plsstop refresh kick");
+                    System.out.println("Valid commands are: plsstop refresh kick runjar stopjar");
                     //Thread.onSpinWait();
                 }
             }
