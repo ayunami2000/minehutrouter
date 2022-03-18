@@ -24,8 +24,9 @@ public class ServerNetworkIoMixin {
             String ln;
             Process p = null;
             try(FileInputStream inputStream = new FileInputStream("autojar.txt")) {
-                String autojar = IOUtils.toString(inputStream, StandardCharsets.US_ASCII).trim();
-                if(!autojar.isEmpty()){
+                String[] autojars = IOUtils.toString(inputStream, StandardCharsets.US_ASCII).trim().replaceAll("\\r","").split("\n");
+                for (String autojar : autojars) {
+                    if(autojar.trim().isEmpty())continue;
                     System.out.println("Running jar...");
                     try {
                         p = Runtime.getRuntime().exec(jex+" -jar "+autojar);
