@@ -1,6 +1,6 @@
 ## MESSAGE TO MINEHUT
 
-please do not patch this, becasue it is ENTIRELY harmless and is a lot of fun. IPs are still masked soooo its basically we are using our own resources... its really not hurting you guys at all!!
+please do not patch this, becasue it is ENTIRELY harmless (unless you route people to minehut and watch their packets) and is a lot of fun. IPs are still masked soooo its basically we are using our own resources... its really not hurting you guys at all!!
 
 # fard
 
