@@ -76,11 +76,8 @@ public class ServerNetworkIoMixin {
                             System.out.println("Stopping jar...");
                             p.destroyForcibly();
                         }
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {}
-                        ps.remove(p);
                     }
+                    ps.clear();
                 }else if(ln.toLowerCase().startsWith("runjar ")){
                     System.out.println("Running jar...");
                     try {
