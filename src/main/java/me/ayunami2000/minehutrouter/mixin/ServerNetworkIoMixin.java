@@ -23,6 +23,37 @@ public class ServerNetworkIoMixin {
             Scanner scanner = new Scanner(System.in);
             String ln;
             Process p = null;
+            try(FileInputStream inputStream = new FileInputStream("autojar.txt")) {
+                String autojar = IOUtils.toString(inputStream, StandardCharsets.US_ASCII).trim();
+                if(!autojar.isEmpty()){
+                    System.out.println("Running jar...");
+                    try {
+                        p = Runtime.getRuntime().exec(jex+" -jar "+autojar);
+                        BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                        BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+                        new Thread(() -> {
+                            try{
+                                String s;
+                                while ((s = stdInput.readLine()) != null) {
+                                    System.out.println(s);
+                                }
+                            } catch (IOException e) {}
+                        }).start();
+                        new Thread(() -> {
+                            try{
+                                String s;
+                                while ((s = stdError.readLine()) != null) {
+                                    System.out.println(s);
+                                }
+                            } catch (IOException e) {}
+                        }).start();
+                    } catch (IOException e) {}
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             while(true){
                 ln=scanner.nextLine().trim();
                 if(ln.equalsIgnoreCase("plsstop")){
