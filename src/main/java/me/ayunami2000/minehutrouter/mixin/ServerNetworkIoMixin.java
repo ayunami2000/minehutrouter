@@ -25,13 +25,13 @@ public class ServerNetworkIoMixin {
             Scanner scanner = new Scanner(System.in);
             String ln;
             List<Process> ps = new ArrayList<>();
-            try(FileInputStream inputStream = new FileInputStream("autojar.txt")) {
+            try(FileInputStream inputStream = new FileInputStream("autojava.txt")) {
                 String[] autojars = IOUtils.toString(inputStream, StandardCharsets.US_ASCII).trim().replaceAll("\\r","").split("\n");
                 for (String autojar : autojars) {
                     if(autojar.trim().isEmpty())continue;
-                    System.out.println("Running jar...");
+                    System.out.println("Running java...");
                     try {
-                        Process p = Runtime.getRuntime().exec(jex+" -jar "+autojar);
+                        Process p = Runtime.getRuntime().exec(jex+" "+autojar);
                         ps.add(p);
                         BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
                         BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -62,6 +62,9 @@ public class ServerNetworkIoMixin {
                 ln=scanner.nextLine().trim();
                 if(ln.equalsIgnoreCase("plsstop")){
                     System.out.println("Stopping!");
+                    for (Process p : ps) {
+                        p.destroyForcibly();
+                    }
                     Runtime.getRuntime().halt(0);
                 }else if(ln.equalsIgnoreCase("refresh")) {
                     System.out.println("Refreshing ip:port from file!");
